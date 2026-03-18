@@ -265,7 +265,7 @@ form.addEventListener('submit', async (e) => {
   // ---- Formspree 送信 ----
   // TODO: YOUR_FORMSPREE_ID を formspree.io で取得したIDに差し替える
   // 受信メール設定先: sasakutterubaaijyanee@gmail.com
-  const res = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
+  const res = await fetch('https://formspree.io/f/meervqdy', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({ name, email, category, message })
