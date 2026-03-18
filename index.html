@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<!-- Google tag (gtag.js) - Google Analytics 4 -->
+<!-- TODO: YOUR_GA4_MEASUREMENT_ID を実際の測定ID（G-XXXXXXXXXX）に差し替えてください -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA4_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'YOUR_GA4_MEASUREMENT_ID');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フリーランス税金かんたん計算</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --pink: #FF6B9D; --yellow: #FFD93D; --mint: #4ECDC4;
+  --blue: #6C63FF; --orange: #FF8C42; --green: #51CF66;
+  --bg: #FFF9F0; --white: #FFFFFF; --text: #2D2D2D; --text-light: #888;
+  --shadow: 0 4px 0 rgba(0,0,0,0.10); --shadow-lg: 0 8px 0 rgba(0,0,0,0.09);
+  --radius: 20px; --radius-sm: 12px;
+}
+body {
+  font-family: 'Noto Sans JP', 'Nunito', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; overflow-x: hidden;
+}
+body::before {
+  content:''; position:fixed; top:-200px; right:-200px;
+  width:600px; height:600px; pointer-events:none; z-index:0;
+  background: radial-gradient(circle, rgba(255,107,157,0.12) 0%, transparent 70%);
+}
+body::after {
+  content:''; position:fixed; bottom:-200px; left:-200px;
+  width:600px; height:600px; pointer-events:none; z-index:0;
+  background: radial-gradient(circle, rgba(108,99,255,0.10) 0%, transparent 70%);
+}
+.container { max-width:680px; margin:0 auto; padding:32px 20px 100px; position:relative; z-index:1; }
+
+/* HEADER */
+.header { text-align:center; margin-bottom:40px; animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes popIn { from{opacity:0;transform:scale(0.8) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.header-emoji { font-size:64px; display:block; margin-bottom:12px; animation: bounce 2s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.header h1 { font-family:'Nunito','Noto Sans JP',sans-serif; font-size:clamp(24px,5vw,34px); font-weight:900; line-height:1.2; margin-bottom:10px; }
+.header h1 .highlight { background:linear-gradient(135deg,var(--pink),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.header-sub { font-size:14px; color:var(--text-light); line-height:1.7; }
+.header-pills { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+.pill { background:var(--white); border:2px solid rgba(0,0,0,0.06); border-radius:50px; padding:5px 14px; font-size:12px; font-weight:700; color:var(--text-light); }
+
+/* STEP CARD */
+.step-card {
+  background:var(--white); border-radius:var(--radius); padding:28px 26px; margin-bottom:20px;
+  box-shadow:var(--shadow-lg); border:2.5px solid rgba(0,0,0,0.05); position:relative; overflow:hidden;
+  animation: slideUp 0.5s ease both;
+}
+.step-card:nth-of-type(2){animation-delay:0.1s} .step-card:nth-of-type(3){animation-delay:0.2s}
+@keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+.step-card::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,var(--pink),var(--yellow),var(--mint)); }
+.step-badge { display:inline-flex; align-items:center; gap:6px; background:linear-gradient(135deg,var(--pink),var(--orange)); color:white; font-size:11px; font-weight:800; padding:4px 12px; border-radius:50px; margin-bottom:12px; letter-spacing:0.05em; }
+.step-card h2 { font-size:18px; font-weight:900; margin-bottom:6px; }
+.step-card .desc { font-size:13px; color:var(--text-light); margin-bottom:22px; line-height:1.65; background:#F8F8FF; border-radius:10px; padding:10px 14px; border-left:3px solid var(--blue); }
+
+/* FIELDS */
+.row2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media(max-width:500px){.row2{grid-template-columns:1fr}}
+.field { display:flex; flex-direction:column; gap:7px; margin-bottom:4px; }
+.field label { font-size:13px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; }
+.label-emoji { font-size:16px; }
+.label-hint { font-size:11px; font-weight:600; color:var(--white); background:var(--mint); padding:2px 8px; border-radius:50px; }
+.input-wrap { position:relative; }
+.input-wrap input {
+  width:100%; font-family:'Nunito',sans-serif; font-size:18px; font-weight:800;
+  padding:13px 50px 13px 16px; border:2.5px solid #EBEBEB; border-radius:var(--radius-sm);
+  background:#FAFAFA; color:var(--text); transition:all 0.2s; -moz-appearance:textfield;
+}
+.input-wrap input::-webkit-outer-spin-button,.input-wrap input::-webkit-inner-spin-button{-webkit-appearance:none}
+.input-wrap input:focus { outline:none; border-color:var(--pink); background:var(--white); box-shadow:0 0 0 4px rgba(255,107,157,0.12); }
+.input-unit { position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:13px; font-weight:700; color:var(--text-light); }
+.field select {
+  font-family:'Noto Sans JP',sans-serif; font-size:14px; font-weight:700;
+  padding:13px 16px; border:2.5px solid #EBEBEB; border-radius:var(--radius-sm);
+  background:#FAFAFA url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  color:var(--text); cursor:pointer; transition:all 0.2s; width:100%; appearance:none;
+}
+.field select:focus { outline:none; border-color:var(--blue); background-color:var(--white); }
+
+/* CHIPS */
+.chip-group { display:flex; gap:8px; flex-wrap:wrap; }
+.chip {
+  font-family:'Noto Sans JP',sans-serif; font-size:12px; font-weight:700;
+  padding:8px 16px; border-radius:50px; border:2.5px solid #EBEBEB;
+  background:#FAFAFA; cursor:pointer; transition:all 0.18s cubic-bezier(0.34,1.56,0.64,1); color:var(--text-light);
+}
+.chip:hover { border-color:var(--pink); color:var(--pink); transform:scale(1.04); }
+.chip.active { background:linear-gradient(135deg,var(--pink),var(--orange)); border-color:transparent; color:white; box-shadow:0 4px 12px rgba(255,107,157,0.35); transform:scale(1.06); }
+.chip.active2 { background:linear-gradient(135deg,var(--blue),var(--mint)); border-color:transparent; color:white; box-shadow:0 4px 12px rgba(108,99,255,0.35); transform:scale(1.06); }
+
+/* BUTTON */
+.calc-btn {
+  width:100%; padding:18px; background:linear-gradient(135deg,var(--pink) 0%,var(--orange) 100%);
+  color:white; border:none; font-family:'Nunito','Noto Sans JP',sans-serif; font-size:18px; font-weight:900;
+  cursor:pointer; border-radius:50px; letter-spacing:0.05em;
+  box-shadow:0 6px 0 #d44a0f, 0 10px 30px rgba(255,107,157,0.3);
+  transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:10px; margin-top:8px;
+}
+.calc-btn:hover { transform:translateY(-2px); box-shadow:0 8px 0 #d44a0f, 0 14px 36px rgba(255,107,157,0.35); }
+.calc-btn:active { transform:translateY(4px); box-shadow:0 2px 0 #d44a0f; }
+.calc-btn-emoji { font-size:22px; }
+
+/* RESULTS */
+#results { display:none; }
+#results.show { display:block; animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+.results-hero {
+  background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+  border-radius:var(--radius); padding:32px 28px; margin-bottom:20px;
+  text-align:center; position:relative; overflow:hidden; box-shadow:var(--shadow-lg);
+}
+.results-hero::before { content:'✨'; position:absolute; font-size:120px; opacity:0.05; top:-20px; right:-20px; }
+.rh-label { font-size:12px; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:8px; }
+.rh-total { font-family:'Nunito',sans-serif; font-size:clamp(38px,7vw,54px); font-weight:900; color:white; letter-spacing:-0.02em; margin-bottom:4px; }
+.rh-rate { font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:20px; }
+.rh-divider { height:1px; background:rgba(255,255,255,0.1); margin:0 -28px 20px; }
+.rh-takehome-label { font-size:13px; color:rgba(255,255,255,0.6); margin-bottom:6px; }
+.rh-takehome { font-family:'Nunito',sans-serif; font-size:30px; font-weight:900; color:var(--yellow); }
+
+/* BAR CARD */
+.bar-card { background:var(--white); border-radius:var(--radius); padding:22px 24px; margin-bottom:20px; box-shadow:var(--shadow); border:2.5px solid rgba(0,0,0,0.05); }
+.bar-card-title { font-size:13px; font-weight:800; color:var(--text-light); margin-bottom:14px; text-transform:uppercase; letter-spacing:0.08em; }
+.ratio-bar { display:flex; height:28px; border-radius:50px; overflow:hidden; gap:3px; margin-bottom:14px; }
+.ratio-seg { border-radius:50px; transition:width 0.8s cubic-bezier(0.34,1.2,0.64,1); }
+.ratio-legend { display:flex; gap:10px; flex-wrap:wrap; }
+.rl-item { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--text); }
+.rl-dot { width:12px; height:12px; border-radius:4px; flex-shrink:0; }
+
+/* TAX ITEMS */
+.tax-item { background:var(--white); border-radius:var(--radius); margin-bottom:14px; box-shadow:var(--shadow); border:2.5px solid rgba(0,0,0,0.05); overflow:hidden; transition:transform 0.2s,box-shadow 0.2s; }
+.tax-item:hover { transform:translateY(-2px); box-shadow:0 8px 0 rgba(0,0,0,0.10); }
+.tax-item-head { display:flex; align-items:center; padding:18px 20px; cursor:pointer; gap:14px; }
+.tax-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.tax-item-info { flex:1; min-width:0; }
+.tax-item-name { font-size:15px; font-weight:900; margin-bottom:4px; }
+.meta-chip { font-size:10px; font-weight:700; padding:2px 8px; border-radius:50px; white-space:nowrap; display:inline-block; margin-top:2px; }
+.tax-amount-col { text-align:right; flex-shrink:0; }
+.tax-amount { font-family:'Nunito',sans-serif; font-size:20px; font-weight:900; }
+.tax-amount-month { font-size:11px; font-weight:600; color:var(--text-light); margin-top:2px; }
+.expand-arrow { font-size:12px; color:var(--text-light); margin-top:4px; transition:transform 0.25s; display:block; text-align:right; }
+.expanded .expand-arrow { transform:rotate(180deg); }
+.tax-detail { display:none; padding:0 20px 20px; border-top:2px dashed #F0F0F0; }
+.tax-detail.open { display:block; animation:fadeIn 0.25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+.tax-desc { font-size:13px; line-height:1.75; color:var(--text-light); margin-top:14px; margin-bottom:14px; }
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+@media(max-width:500px){.info-grid{grid-template-columns:1fr}}
+.info-box { background:#F8F8FF; border-radius:12px; padding:12px 14px; }
+.ib-label { font-size:10px; font-weight:800; color:var(--text-light); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:5px; }
+.ib-value { font-size:13px; font-weight:700; color:var(--text); line-height:1.5; }
+.breakdown-box { background:linear-gradient(135deg,#FFFBF0,#FFF3D6); border:2px solid #FFD93D; border-radius:12px; padding:14px 16px; font-family:'Nunito',monospace; font-size:12px; font-weight:700; line-height:2; color:#6B5000; }
+.bb-title { font-size:10px; text-transform:uppercase; letter-spacing:0.12em; color:#B8860B; margin-bottom:6px; }
+
+/* TIPS */
+.tips-card { background:linear-gradient(135deg,#F0FFF4,#E6FFFA); border:2.5px solid var(--green); border-radius:var(--radius); padding:22px 24px; margin-top:8px; box-shadow:var(--shadow); }
+.tips-title { font-size:15px; font-weight:900; margin-bottom:14px; display:flex; align-items:center; gap:8px; color:#2D6A4F; }
+.tips-card ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.tips-card li { font-size:13px; line-height:1.65; color:#2D6A4F; display:flex; align-items:flex-start; gap:8px; }
+.tips-card li::before { content:'✅'; flex-shrink:0; font-size:14px; margin-top:1px; }
+
+/* SITE FOOTER */
+.site-footer {
+  text-align:center; padding:32px 0 0; margin-top:8px;
+  font-size:12px; color:var(--text-light);
+}
+.site-footer p { margin-bottom:8px; }
+.site-footer nav { display:flex; gap:20px; justify-content:center; }
+.site-footer nav a { color:var(--blue); text-decoration:none; font-weight:700; }
+.site-footer nav a:hover { text-decoration:underline; }
+.disclaimer { text-align:center; font-size:11px; color:var(--text-light); margin-top:28px; line-height:1.7; padding:14px; background:var(--white); border-radius:var(--radius-sm); border:2px dashed #EBEBEB; }
+
+/* Reveal animation */
+.reveal { opacity:0; transform:translateY(20px); transition:opacity 0.5s ease,transform 0.5s ease; }
+.reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="header">
+    <span class="header-emoji">🧮</span>
+    <h1>フリーランスの<br><span class="highlight">税金</span>、全部わかる！</h1>
+    <p class="header-sub">売上を入力するだけで、払う税金が全部わかります<br>「いつ・どこで・いくら」払うかまで教えます</p>
+    <div class="header-pills">
+      <span class="pill">💡 知識ゼロOK</span>
+      <span class="pill">⏱ 30秒で完了</span>
+      <span class="pill">🔒 入力情報は保存なし</span>
+    </div>
+  </header>
+
+  <div class="step-card">
+    <span class="step-badge">STEP 1 💰</span>
+    <h2>収入と経費を教えてください</h2>
+    <p class="desc">📌 <strong>売上</strong> = 今年お客さんからもらった報酬の合計 ／ <strong>経費</strong> = 仕事に使ったお金（PC・交通費など）。わからなければ経費は0でOK！</p>
+    <div class="row2">
+      <div class="field">
+        <label><span class="label-emoji">💴</span> 年間売上</label>
+        <div class="input-wrap">
+          <input type="number" id="revenue" placeholder="5000000" min="0">
+          <span class="input-unit">円</span>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="label-emoji">🧾</span> 年間経費 <span class="label-hint">なければ0</span></label>
+        <div class="input-wrap">
+          <input type="number" id="expense" placeholder="1000000" min="0">
+          <span class="input-unit">円</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <span class="step-badge">STEP 2 📋</span>
+    <h2>あなたの状況を選んでね</h2>
+    <p class="desc">📌 わからなければそのままでもOK！デフォルト設定でもだいたい合っています。</p>
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div class="field">
+        <label><span class="label-emoji">📝</span> 確定申告の種類</label>
+        <div class="chip-group">
+          <button class="chip active" onclick="setToggle('aoiro','65',this,'active')">青色65万円（おすすめ）</button>
+          <button class="chip" onclick="setToggle('aoiro','10',this,'active')">青色10万円</button>
+          <button class="chip" onclick="setToggle('aoiro','0',this,'active')">白色申告</button>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="label-emoji">🏪</span> 消費税の納税</label>
+        <div class="chip-group">
+          <button class="chip active2" onclick="setToggle('taxable','false',this,'active2')">免税（売上1000万以下）</button>
+          <button class="chip" onclick="setToggle('taxable','true',this,'active2')">課税事業者（1000万超）</button>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label><span class="label-emoji">👨‍👩‍👧</span> 扶養家族の数</label>
+          <select id="dependents">
+            <option value="0">0人</option><option value="1">1人</option>
+            <option value="2">2人</option><option value="3">3人</option><option value="4">4人以上</option>
+          </select>
+        </div>
+        <div class="field">
+          <label><span class="label-emoji">🎂</span> 年齢</label>
+          <select id="age">
+            <option value="under40">40歳未満</option>
+            <option value="40to64">40〜64歳</option>
+            <option value="over65">65歳以上</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label><span class="label-emoji">🏠</span> お住まいの都道府県</label>
+        <select id="prefecture">
+          <option value="tokyo">東京都</option><option value="osaka">大阪府</option>
+          <option value="kanagawa">神奈川県</option><option value="aichi">愛知県</option>
+          <option value="other">その他（平均値）</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <button class="calc-btn" onclick="calculate()">
+    <span class="calc-btn-emoji">✨</span>税金を計算する！<span class="calc-btn-emoji">🚀</span>
+  </button>
+
+  <div id="results">
+    <br>
+    <div class="results-hero">
+      <div class="rh-label">年間の税金・社会保険料 合計</div>
+      <div class="rh-total" id="total-display">—</div>
+      <div class="rh-rate" id="total-rate">実質負担率: —%</div>
+      <div class="rh-divider"></div>
+      <div class="rh-takehome-label">💰 推定手取り（売上−税金−経費）</div>
+      <div class="rh-takehome" id="takehome-display">—</div>
+    </div>
+    <div class="bar-card reveal">
+      <div class="bar-card-title">📊 税金の内訳</div>
+      <div class="ratio-bar" id="ratio-bar"></div>
+      <div class="ratio-legend" id="ratio-legend"></div>
+    </div>
+    <div id="tax-items"></div>
+    <div class="tips-card reveal">
+      <div class="tips-title">🌿 節税のポイント（基本）</div>
+      <ul>
+        <li>青色申告65万円控除は freee・マネーフォワードで電子申告するだけ。年10万円以上の節税になります</li>
+        <li>国民健康保険料は所得に連動するので、経費をきちんと計上するだけで安くなります</li>
+        <li>小規模企業共済（月最大7万円）は全額が所得控除。老後の積立＋節税に最強です</li>
+        <li>iDeCo（個人型確定拠出年金）も掛金が全額所得控除になります</li>
+        <li>国民年金は2年前払いで約1.7万円お得。クレジットカード払いでポイントもつきます</li>
+      </ul>
+    </div>
+    <div class="disclaimer">⚠️ この計算は概算です。実際の税額は市区町村・加入組合・各種控除によって異なります。<br>確定申告の際は税理士または税務署にご確認ください。</div>
+  </div>
+  <!-- フッター -->
+  <footer class="site-footer">
+    <p>© 2025 フリーランス税金かんたん計算</p>
+    <nav>
+      <a href="privacy-policy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </footer>
+</div>
+
+<script>
+const state = { aoiro:'65', taxable:'false' };
+
+function setToggle(key, val, btn, cls) {
+  state[key] = val;
+  btn.parentElement.querySelectorAll('.chip').forEach(b => b.classList.remove('active','active2'));
+  btn.classList.add(cls);
+}
+function fmt(n){ return Math.round(n).toLocaleString('ja-JP')+'円'; }
+
+function calculate() {
+  const revenue    = parseFloat(document.getElementById('revenue').value) || 0;
+  const expense    = parseFloat(document.getElementById('expense').value) || 0;
+  const dependents = parseInt(document.getElementById('dependents').value) || 0;
+  const age        = document.getElementById('age').value;
+  const pref       = document.getElementById('prefecture').value;
+
+  const aoDed   = parseInt(state.aoiro)*10000;
+  const baseDed = 480000;
+  const depDed  = dependents*380000;
+  const bizInc  = Math.max(0, revenue-expense);
+  const taxInc  = Math.max(0, bizInc-aoDed-baseDed-depDed);
+
+  function itax(inc){
+    for(const[l,r,d] of [[1950000,.05,0],[3300000,.10,97500],[6950000,.20,427500],[9000000,.23,636000],[18000000,.33,1536000],[40000000,.40,2796000],[Infinity,.45,4796000]])
+      if(inc<=l) return Math.max(0,inc*r-d);
+  }
+  const incomeTax = Math.round(itax(taxInc)*1.021);
+
+  const jBase  = Math.max(0, bizInc-aoDed-430000-dependents*330000);
+  const juminTax = Math.round(jBase*0.10)+5000;
+
+  const PR={tokyo:{ir:.0743,fix:55440,kfix:16800},osaka:{ir:.0913,fix:62400,kfix:18000},kanagawa:{ir:.0718,fix:51480,kfix:14400},aichi:{ir:.0765,fix:51960,kfix:16800},other:{ir:.0780,fix:55000,kfix:16000}};
+  const pr=PR[pref];
+  const nBase=Math.max(0,bizInc-aoDed-430000);
+  const nKaigo=age==='40to64'?nBase*0.0193+pr.kfix:0;
+  const nhi=Math.min(Math.round(nBase*pr.ir+pr.fix+nKaigo),870000);
+  const nenkin=16980*12;
+  const cTax=state.taxable==='true'?Math.round(revenue*0.909*0.10*0.5):0;
+
+  const total=incomeTax+juminTax+nhi+nenkin+cTax;
+  const rate=revenue>0?((total/revenue)*100).toFixed(1):0;
+  const takehome=revenue-total-expense;
+
+  document.getElementById('total-display').textContent=fmt(total);
+  document.getElementById('total-rate').textContent=`実質負担率（対売上）: ${rate}%`;
+  document.getElementById('takehome-display').textContent=fmt(Math.max(0,takehome));
+
+  const COLORS=['#FF6B9D','#6C63FF','#4ECDC4','#FFD93D','#FF8C42'];
+  const LABELS=['所得税','住民税','国保','国民年金','消費税'];
+  const VALS=[incomeTax,juminTax,nhi,nenkin,cTax];
+  const bar=document.getElementById('ratio-bar'), leg=document.getElementById('ratio-legend');
+  bar.innerHTML=leg.innerHTML='';
+  VALS.forEach((v,i)=>{
+    if(!v) return;
+    const pct=total>0?(v/total*100).toFixed(1):0;
+    const s=document.createElement('div'); s.className='ratio-seg';
+    s.style.cssText=`width:${pct}%;background:${COLORS[i]};`; bar.appendChild(s);
+    const l=document.createElement('div'); l.className='rl-item';
+    l.innerHTML=`<div class="rl-dot" style="background:${COLORS[i]}"></div>${LABELS[i]} ${pct}%`; leg.appendChild(l);
+  });
+
+  const ICONS=[
+    {icon:'📊',bg:'#FFF0F5',color:'#FF6B9D'},{icon:'🏙️',bg:'#F0F0FF',color:'#6C63FF'},
+    {icon:'🏥',bg:'#F0FFFE',color:'#4ECDC4'},{icon:'🏛️',bg:'#FFFDE7',color:'#F9A825'},
+    {icon:'🧾',bg:'#FFF3E0',color:'#FF8C42'}
+  ];
+  const ITEMS=[
+    {name:'所得税',amount:incomeTax,...ICONS[0],
+     when:'翌年3月15日まで',where:'税務署・e-Tax・銀行',how:'確定申告で自分で計算して納付',
+     desc:'1年間の「儲け」に対してかかる税金。所得が多いほど税率が上がる「累進課税」です。毎年2〜3月の確定申告で計算・納付します。経費や控除を増やすほど安くなります。',
+     bd:`事業所得: ${fmt(bizInc)}\n青色控除: ▲${fmt(aoDed)}\n基礎控除: ▲${fmt(baseDed)}\n扶養控除: ▲${fmt(depDed)}\n課税所得: ${fmt(taxInc)}\n所得税額（復興税込）: 👉 ${fmt(incomeTax)}`},
+    {name:'住民税',amount:juminTax,...ICONS[1],
+     when:'翌々年6月〜（4回払い）',where:'市区町村・コンビニ・口座振替',how:'確定申告後、市区町村から納付書が届く',
+     desc:'前年の所得に対して住んでいる市区町村に払う税金。確定申告すると自動計算されて6月頃に納付書が届きます。自分でどこかに申告する必要はありません。',
+     bd:`課税所得（住民税用）: ${fmt(jBase)}\n税率: 10%\n均等割: 5,000円\n住民税額: 👉 ${fmt(juminTax)}`},
+    {name:'国民健康保険',amount:nhi,...ICONS[2],
+     when:'毎年6〜7月頃〜（8〜10回払い）',where:'市区町村・コンビニ・口座振替',how:'市区町村から届く納付書で支払い',
+     desc:'会社員の健康保険のフリーランス版。病院で3割負担で診てもらえる保険料です。所得と住む市区町村によって金額が変わります。経費が増えると保険料も下がります。',
+     bd:`所得割基礎: ${fmt(nBase)}\n所得割: ${fmt(nBase*pr.ir)}\n均等割: ${fmt(pr.fix)}\n${age==='40to64'?`介護分: ${fmt(nKaigo)}\n`:''}上限額: 870,000円\n国保額: 👉 ${fmt(nhi)}`},
+    {name:'国民年金',amount:nenkin,...ICONS[3],
+     when:'毎月末日（年払い・2年払い割引あり）',where:'銀行・コンビニ・口座振替・クレカ',how:'日本年金機構から届く納付書 or 口座振替',
+     desc:'老後にもらえる年金のための積立金。フリーランスは月16,980円を自分で払います。年払い・2年前払いにすると割引があり、クレカ払いでポイントも貯まります。',
+     bd:`月額: 16,980円 × 12ヶ月\n国民年金額: 👉 ${fmt(nenkin)}\n💡 2年前払い割引: 約▲${fmt(nenkin*0.034)}`},
+  ];
+  if(cTax>0) ITEMS.push({name:'消費税',amount:cTax,...ICONS[4],
+    when:'翌年3月31日まで',where:'税務署・e-Tax',how:'確定申告とは別に消費税申告書を提出',
+    desc:'売上1,000万円を超えると課税事業者となり、受け取った消費税を国に納める義務が生じます。ここでは簡易課税（第5種・みなし仕入率50%）で計算しています。',
+    bd:`売上（税抜概算）: ${fmt(revenue*0.909)}\n消費税額: ${fmt(revenue*0.909*0.10)}\n仕入税額控除（50%）: ▲${fmt(revenue*0.909*0.10*0.5)}\n消費税納付額: 👉 ${fmt(cTax)}`});
+
+  const cont=document.getElementById('tax-items'); cont.innerHTML='';
+  ITEMS.forEach(item=>{
+    if(!item.amount) return;
+    const d=document.createElement('div'); d.className='tax-item reveal';
+    d.innerHTML=`
+      <div class="tax-item-head" onclick="toggleDetail(this)">
+        <div class="tax-icon" style="background:${item.bg}">${item.icon}</div>
+        <div class="tax-item-info">
+          <div class="tax-item-name">${item.name}</div>
+          <span class="meta-chip" style="background:${item.bg};color:${item.color}">📅 ${item.when}</span>
+        </div>
+        <div class="tax-amount-col">
+          <div class="tax-amount" style="color:${item.color}">${fmt(item.amount)}</div>
+          <div class="tax-amount-month">月換算 ${fmt(item.amount/12)}</div>
+          <span class="expand-arrow">▼ 詳細</span>
+        </div>
+      </div>
+      <div class="tax-detail">
+        <p class="tax-desc">${item.desc}</p>
+        <div class="info-grid">
+          <div class="info-box"><div class="ib-label">📅 支払いタイミング</div><div class="ib-value">${item.when}</div></div>
+          <div class="info-box"><div class="ib-label">🏦 支払い場所・方法</div><div class="ib-value">${item.where}</div></div>
+          <div class="info-box" style="grid-column:1/-1"><div class="ib-label">📋 手続き方法</div><div class="ib-value">${item.how}</div></div>
+        </div>
+        <div class="breakdown-box"><div class="bb-title">🔢 計算の内訳</div>${item.bd.replace(/\n/g,'<br>')}</div>
+      </div>`;
+    cont.appendChild(d);
+  });
+
+  const res=document.getElementById('results');
+  res.classList.add('show');
+  setTimeout(()=>{ res.scrollIntoView({behavior:'smooth',block:'start'}); observeReveal(); },100);
+}
+
+function toggleDetail(head){
+  const det=head.nextElementSibling;
+  const open=det.classList.contains('open');
+  det.classList.toggle('open',!open);
+  head.classList.toggle('expanded',!open);
+}
+
+function observeReveal(){
+  const els=document.querySelectorAll('.reveal:not(.visible)');
+  if('IntersectionObserver' in window){
+    const obs=new IntersectionObserver(entries=>{
+      entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*80); obs.unobserve(e.target); } });
+    },{threshold:0.1});
+    els.forEach(el=>obs.observe(el));
+  } else { els.forEach(el=>el.classList.add('visible')); }
+}
+</script>
+</body>
+</html>

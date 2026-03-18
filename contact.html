@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ | フリーランス税金かんたん計算</title>
+<meta name="description" content="フリーランス税金かんたん計算へのお問い合わせページです。">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://your-domain.com/contact.html">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --pink: #FF6B9D; --yellow: #FFD93D; --mint: #4ECDC4;
+  --blue: #6C63FF; --orange: #FF8C42; --green: #51CF66;
+  --bg: #FFF9F0; --white: #FFFFFF; --text: #2D2D2D; --text-light: #888;
+  --shadow: 0 4px 0 rgba(0,0,0,0.10); --shadow-lg: 0 8px 0 rgba(0,0,0,0.09);
+  --radius: 20px; --radius-sm: 12px;
+}
+body {
+  font-family: 'Noto Sans JP','Nunito',sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; overflow-x: hidden; line-height: 1.8;
+}
+body::before {
+  content:''; position:fixed; top:-200px; right:-200px;
+  width:600px; height:600px; pointer-events:none; z-index:0;
+  background: radial-gradient(circle, rgba(255,107,157,0.12) 0%, transparent 70%);
+}
+body::after {
+  content:''; position:fixed; bottom:-200px; left:-200px;
+  width:600px; height:600px; pointer-events:none; z-index:0;
+  background: radial-gradient(circle, rgba(108,99,255,0.10) 0%, transparent 70%);
+}
+.container { max-width:640px; margin:0 auto; padding:40px 20px 100px; position:relative; z-index:1; }
+
+.header { text-align:center; margin-bottom:36px; animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes popIn { from{opacity:0;transform:scale(0.8) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.header-emoji { font-size:56px; display:block; margin-bottom:12px; }
+.header h1 { font-family:'Nunito','Noto Sans JP',sans-serif; font-size:clamp(22px,5vw,30px); font-weight:900; margin-bottom:8px; }
+.header h1 .highlight { background:linear-gradient(135deg,var(--pink),var(--orange)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.header-sub { font-size:13px; color:var(--text-light); }
+
+.back-link {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:13px; font-weight:700; color:var(--blue);
+  text-decoration:none; margin-bottom:24px;
+  padding:8px 16px; background:var(--white);
+  border-radius:50px; box-shadow:var(--shadow); transition:transform 0.15s;
+}
+.back-link:hover { transform:translateY(-2px); }
+
+.card {
+  background:var(--white); border-radius:var(--radius);
+  padding:32px 28px; margin-bottom:20px;
+  box-shadow:var(--shadow-lg); border:2.5px solid rgba(0,0,0,0.05);
+  position:relative; overflow:hidden;
+  animation: slideUp 0.5s ease both;
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+.card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:linear-gradient(90deg,var(--pink),var(--yellow),var(--mint)); }
+
+.info-box {
+  background:#F0EEFF; border-left:4px solid var(--blue);
+  border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:24px;
+  font-size:13px; color:#444; line-height:1.75;
+}
+
+/* FORM */
+.field { display:flex; flex-direction:column; gap:7px; margin-bottom:20px; }
+.field label { font-size:13px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:6px; }
+.required-badge { font-size:10px; font-weight:800; color:white; background:var(--pink); padding:2px 7px; border-radius:50px; }
+.optional-badge { font-size:10px; font-weight:800; color:white; background:var(--text-light); padding:2px 7px; border-radius:50px; }
+
+.field input, .field select, .field textarea {
+  font-family:'Noto Sans JP',sans-serif; font-size:14px; font-weight:500;
+  padding:13px 16px; border:2.5px solid #EBEBEB; border-radius:var(--radius-sm);
+  background:#FAFAFA; color:var(--text); transition:all 0.2s; width:100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline:none; border-color:var(--blue); background:var(--white);
+  box-shadow:0 0 0 4px rgba(108,99,255,0.12);
+}
+.field textarea { resize:vertical; min-height:140px; line-height:1.7; }
+.field select {
+  background:#FAFAFA url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+  appearance:none; cursor:pointer;
+}
+
+.submit-btn {
+  width:100%; padding:16px; border:none; border-radius:var(--radius-sm); cursor:pointer;
+  font-family:'Nunito','Noto Sans JP',sans-serif; font-size:16px; font-weight:900;
+  color:white; background:linear-gradient(135deg,var(--blue),var(--pink));
+  box-shadow:0 6px 0 rgba(108,99,255,0.35); transition:all 0.15s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  letter-spacing:0.03em;
+}
+.submit-btn:hover { transform:translateY(-2px); box-shadow:0 8px 0 rgba(108,99,255,0.35); }
+.submit-btn:active { transform:translateY(3px); box-shadow:0 3px 0 rgba(108,99,255,0.35); }
+.submit-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+
+/* SUCCESS STATE */
+.success-card {
+  display:none; text-align:center; padding:48px 28px;
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.success-card.show { display:block; }
+.success-emoji { font-size:64px; display:block; margin-bottom:16px; }
+.success-card h2 { font-size:22px; font-weight:900; margin-bottom:10px; }
+.success-card p { font-size:14px; color:var(--text-light); margin-bottom:24px; }
+.back-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:14px 28px; background:linear-gradient(135deg,var(--mint),var(--blue));
+  color:white; font-weight:800; font-size:14px;
+  border-radius:var(--radius-sm); text-decoration:none;
+  box-shadow:0 4px 0 rgba(78,205,196,0.4); transition:all 0.15s;
+}
+.back-btn:hover { transform:translateY(-2px); }
+
+.footer { text-align:center; padding:40px 0 0; font-size:12px; color:var(--text-light); }
+.footer a { color:var(--blue); text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="index.html" class="back-link">← ツールに戻る</a>
+
+  <div class="header">
+    <span class="header-emoji">✉️</span>
+    <h1><span class="highlight">お問い合わせ</span></h1>
+    <p class="header-sub">フリーランス税金かんたん計算</p>
+  </div>
+
+  <!-- フォームカード -->
+  <div class="card" id="formCard">
+    <div class="info-box">
+      💬 計算結果に関するご質問、不具合のご報告、掲載内容へのご意見などをお気軽にどうぞ。<br>
+      通常 <strong>3営業日以内</strong> にご返信いたします。
+    </div>
+
+    <form id="contactForm" novalidate>
+      <div class="field">
+        <label>
+          お名前
+          <span class="required-badge">必須</span>
+        </label>
+        <input type="text" id="name" name="name" placeholder="山田 太郎" autocomplete="name" required>
+      </div>
+
+      <div class="field">
+        <label>
+          メールアドレス
+          <span class="required-badge">必須</span>
+        </label>
+        <input type="email" id="email" name="email" placeholder="example@email.com" autocomplete="email" required>
+      </div>
+
+      <div class="field">
+        <label>
+          お問い合わせ種別
+          <span class="required-badge">必須</span>
+        </label>
+        <select id="category" name="category" required>
+          <option value="">選択してください</option>
+          <option value="calc_error">計算結果について</option>
+          <option value="bug">不具合・表示の問題</option>
+          <option value="feature">機能のご要望</option>
+          <option value="content">掲載内容について</option>
+          <option value="privacy">プライバシーポリシーについて</option>
+          <option value="other">その他</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>
+          お問い合わせ内容
+          <span class="required-badge">必須</span>
+        </label>
+        <textarea id="message" name="message" placeholder="お問い合わせ内容を入力してください。&#10;&#10;（不具合の場合）使用したOS・ブラウザと、どのような操作をしたかを教えていただけると対応がスムーズです。" required></textarea>
+      </div>
+
+      <div class="field">
+        <label>
+          ご利用の都道府県
+          <span class="optional-badge">任意</span>
+        </label>
+        <select id="prefecture" name="prefecture">
+          <option value="">選択しない</option>
+          <option>北海道</option><option>青森県</option><option>岩手県</option>
+          <option>宮城県</option><option>秋田県</option><option>山形県</option>
+          <option>福島県</option><option>茨城県</option><option>栃木県</option>
+          <option>群馬県</option><option>埼玉県</option><option>千葉県</option>
+          <option>東京都</option><option>神奈川県</option><option>新潟県</option>
+          <option>富山県</option><option>石川県</option><option>福井県</option>
+          <option>山梨県</option><option>長野県</option><option>岐阜県</option>
+          <option>静岡県</option><option>愛知県</option><option>三重県</option>
+          <option>滋賀県</option><option>京都府</option><option>大阪府</option>
+          <option>兵庫県</option><option>奈良県</option><option>和歌山県</option>
+          <option>鳥取県</option><option>島根県</option><option>岡山県</option>
+          <option>広島県</option><option>山口県</option><option>徳島県</option>
+          <option>香川県</option><option>愛媛県</option><option>高知県</option>
+          <option>福岡県</option><option>佐賀県</option><option>長崎県</option>
+          <option>熊本県</option><option>大分県</option><option>宮崎県</option>
+          <option>鹿児島県</option><option>沖縄県</option>
+        </select>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <span>📨</span> 送信する
+      </button>
+    </form>
+
+    <!-- 成功表示（同一カード内に切り替え） -->
+    <div class="success-card" id="successCard">
+      <span class="success-emoji">🎉</span>
+      <h2>送信しました！</h2>
+      <p>お問い合わせありがとうございます。<br>通常3営業日以内にご返信いたします。</p>
+      <a href="index.html" class="back-btn">← ツールに戻る</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2025 フリーランス税金かんたん計算 ·
+      <a href="index.html">トップ</a> ·
+      <a href="privacy-policy.html">プライバシーポリシー</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+// -------------------------------------------------------
+// フォーム送信処理
+// Formspree（無料・登録不要）を使用する場合は
+// action の URL を https://formspree.io/f/YOUR_ID に変更してください。
+// 現状はデモ用のモック送信です。
+// -------------------------------------------------------
+const form = document.getElementById('contactForm');
+const submitBtn = document.getElementById('submitBtn');
+const successCard = document.getElementById('successCard');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // バリデーション
+  const name     = document.getElementById('name').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const category = document.getElementById('category').value;
+  const message  = document.getElementById('message').value.trim();
+
+  if (!name || !email || !category || !message) {
+    alert('必須項目をすべて入力してください。');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('メールアドレスの形式が正しくありません。');
+    return;
+  }
+
+  // 送信中の表示
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span>⏳</span> 送信中...';
+
+  // ---- Formspree 送信 ----
+  // TODO: YOUR_FORMSPREE_ID を formspree.io で取得したIDに差し替える
+  // 受信メール設定先: sasakutterubaaijyanee@gmail.com
+  const res = await fetch('https://formspree.io/f/YOUR_FORMSPREE_ID', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ name, email, category, message })
+  });
+  if (!res.ok) {
+    alert('送信に失敗しました。しばらくしてから再度お試しください。');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<span>📨</span> 送信する';
+    return;
+  }
+
+  form.style.display = 'none';
+  successCard.classList.add('show');
+});
+</script>
+</body>
+</html>
